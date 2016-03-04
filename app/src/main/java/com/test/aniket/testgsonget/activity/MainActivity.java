@@ -163,9 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 gsonBuilder.setDateFormat("M/d/yy hh:mm a");
                 Gson gson = gsonBuilder.create();
 
-                DailyForecastPageAdapter adapter = null;
-                pager.setAdapter(null);
-
                 if (byCityName) {
                     //convert the json string back to object
                     ResponseDataObject obj = gson.fromJson(responseJsonObject, ResponseDataObject.class);
@@ -175,7 +172,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Server Response: " + forecasts[0].toString());
 
                     setInformation(obj);
+                    DailyForecastPageAdapter adapter = null;
+                    pager.setAdapter(null);
                     adapter = new DailyForecastPageAdapter(Integer.parseInt(forecastDaysNum), getSupportFragmentManager(), obj, byCityName);
+                    pager.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 } else {
                     //convert the json string back to object
                     LocationResponseDataObject obj = gson.fromJson(responseJsonObject, LocationResponseDataObject.class);
@@ -185,11 +186,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Server Response: " + locationForecasts[0].toString());
 
                     setInformation(obj);
+                    DailyForecastPageAdapter adapter = null;
+                    pager.setAdapter(null);
                     adapter = new DailyForecastPageAdapter(Integer.parseInt(forecastDaysNum), getSupportFragmentManager(), obj, byCityName);
+                    pager.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
-
-                pager.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
 
                 if (pDialog.isShowing())
                     pDialog.hide();

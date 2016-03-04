@@ -32,21 +32,20 @@ public class DayForecastFragment extends Fragment {
     TextView descView;
     private ImageView iconWeather;
     private Forecast dayForecast;
+    private LocationForecast locationForecast;
     private String params = "";
     private boolean byCityName;
-    private LocationForecast locationForecast;
-//    private Weather forecast;
 
     public DayForecastFragment() {
         // Required empty public constructor
     }
 
-    public void setForecast(Forecast dayForecast) {
-        this.dayForecast = dayForecast;
-    }
-
     public void setByCityName(boolean byCityName) {
         this.byCityName = byCityName;
+    }
+
+    public void setForecast(Forecast dayForecast) {
+        this.dayForecast = dayForecast;
     }
 
     public void setLocationForecast(LocationForecast locationForecast) {
@@ -68,7 +67,7 @@ public class DayForecastFragment extends Fragment {
                     + (int) (dayForecast.getTemp().getMax() - 275.15));
             descView.setText(dayForecast.getWeatherList()[0].getDescription());
             params = dayForecast.getWeatherList()[0].getIcon();
-        }else {
+        } else {
             tempView.setText((int) (locationForecast.getMain().getTemp_min() - 275.15) + "-"
                     + (int) (locationForecast.getMain().getTemp_max() - 275.15));
             descView.setText(locationForecast.getWeatherList()[0].getDescription());

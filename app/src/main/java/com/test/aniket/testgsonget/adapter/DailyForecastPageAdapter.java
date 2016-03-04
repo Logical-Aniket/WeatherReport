@@ -64,10 +64,10 @@ public class DailyForecastPageAdapter extends FragmentStatePagerAdapter {
             f.setByCityName(byCityName);
             f.setForecast(dayForecast);
         }else{
-            LocationForecast dayForecast = locationResponseDataObject.getLocationForecastList()[num];
+            LocationForecast locationForecast = locationResponseDataObject.getLocationForecastList()[num];
             f = new DayForecastFragment();
             f.setByCityName(byCityName);
-            f.setLocationForecast(dayForecast);
+            f.setLocationForecast(locationForecast);
         }
         return f;
     }
