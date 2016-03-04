@@ -1,21 +1,15 @@
 package com.test.aniket.testgsonget.activity;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +18,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,12 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView cityText;
     private TextView condDescr;
     private TextView temp;
-    private TextView press;
-    private TextView windSpeed;
-    private TextView windDeg;
     private TextView unitTemp;
 
-    private TextView hum;
     private ImageView imgView;
 
     private static String forecastDaysNum = "14";
@@ -91,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//                createDialog();
                 createNewDialog();
             }
         });
@@ -124,9 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //What ever you want to do with the value
-                Editable YouEditTextValue = edittext.getText();
-                //OR
                 String city = edittext.getText().toString();
                 if (city.isEmpty())
                     Toast.makeText(mContext,
@@ -180,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
                 gsonBuilder.setDateFormat("M/d/yy hh:mm a");
                 Gson gson = gsonBuilder.create();
 
+                DailyForecastPageAdapter adapter = null;
+                pager.setAdapter(null);
+
                 if (byCityName) {
                     //convert the json string back to object
                     ResponseDataObject obj = gson.fromJson(responseJsonObject, ResponseDataObject.class);
@@ -189,13 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Server Response: " + forecasts[0].toString());
 
                     setInformation(obj);
-
-                    DailyForecastPageAdapter adapter = null;
-                    pager.setAdapter(null);
-
                     adapter = new DailyForecastPageAdapter(Integer.parseInt(forecastDaysNum), getSupportFragmentManager(), obj, byCityName);
-                    pager.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
                 } else {
                     //convert the json string back to object
                     LocationResponseDataObject obj = gson.fromJson(responseJsonObject, LocationResponseDataObject.class);
@@ -205,19 +185,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Server Response: " + locationForecasts[0].toString());
 
                     setInformation(obj);
-
-                    DailyForecastPageAdapter adapter = null;
-                    pager.setAdapter(null);
-
                     adapter = new DailyForecastPageAdapter(Integer.parseInt(forecastDaysNum), getSupportFragmentManager(), obj, byCityName);
-                    pager.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
                 }
 
+                pager.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
                 if (pDialog.isShowing())
                     pDialog.hide();
-//                pager.setResponseObject();
 
             }
         }, new Response.ErrorListener() {
@@ -245,106 +220,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String createJson() {
-//        Map<String, Map<String, String>> mainJson = new HashMap<String, Map<String, String>>();
-//        Map<String, String> params = new HashMap<String, String>();
-//        params.put("q", "London");
-//        params.put("cnt", "15");
-//        params.put("appid", "44db6a862fba0b067b1930da0d769e98");
-//
-////        mainJson.put("daily", params);
-////        String json = new GsonBuilder().create().toJson(params, Map.class);
-//        String json = new GsonBuilder().create().toJson(params, Map.class);
-////        makeRequest("http://192.168.0.1:3000/post/77/comments", json);
-//
-////        Log.e(TAG, json);
-//
-//        return json;
         return null;
     }
-
-    private void createDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("PASSWORD");
-        alertDialog.setMessage("Enter Password");
-
-        final EditText input = new EditText(MainActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
-//        alertDialog.setIcon(R.drawable.key);
-
-        alertDialog.setPositiveButton("YES",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                        password = input.getText().toString();
-//                        if (password.compareTo("") == 0) {
-//                            if (pass.equals(password)) {
-//                                Toast.makeText(getApplicationContext(),
-//                                        "Password Matched", Toast.LENGTH_SHORT).show();
-//                                Intent myIntent1 = new Intent(view.getContext(),
-//                                        Show.class);
-//                                startActivityForResult(myIntent1, 0);
-//                            } else {
-//                                Toast.makeText(getApplicationContext(),
-//                                        "Wrong Password!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-                    }
-                });
-
-        alertDialog.setNegativeButton("NO",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        alertDialog.show();
-    }
-
-    private LocationListener locListener = new LocationListener() {
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d("SwA", "Location changed!");
-            String sLat = "" + location.getLatitude();
-            String sLon = "" + location.getLongitude();
-            Log.d("SwA", "Lat [" + sLat + "] - sLong [" + sLon + "]");
-
-            currentLocation = location;
-
-            LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MainActivity.this, "Please Enable GPS Permissions!", Toast.LENGTH_LONG).show();
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            } else
-                locManager.removeUpdates(locListener);
-//            JSONSearchTask task = new JSONSearchTask();
-//            task.execute(new Location[]{location});
-        }
-    };
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -364,45 +241,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_by_location) {
             byCityName = false;
             usingService();
-
-//            if (Utility.isNetworkConnected(mContext)) {
-//                if (currentLocation == null) {
-//                    // Get the location manager
-//                    LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//                    Criteria criteria = new Criteria();
-//                    String bestProvider = locationManager.getBestProvider(criteria, false);
-//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        Toast.makeText(MainActivity.this, "Please Enable GPS Permissions!", Toast.LENGTH_LONG).show();
-//                        // TODO: Consider calling
-//                        //    ActivityCompat#requestPermissions
-//                        // here to request the missing permissions, and then overriding
-//                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                        //                                          int[] grantResults)
-//                        // to handle the case where the user grants the permission. See the documentation
-//                        // for ActivityCompat#requestPermissions for more details.
-//                        return false;
-//                    } else
-//                        currentLocation = locationManager.getLastKnownLocation(bestProvider);
-//
-//                }
-//                String lat = "";
-//                String lon = "";
-//
-//                lat = String.valueOf(currentLocation.getLatitude());
-//                lon = String.valueOf(currentLocation.getLongitude());
-//                if (lat.isEmpty() || lon.isEmpty())
-//                    Toast.makeText(MainActivity.this, "Check GPS Settings!", Toast.LENGTH_LONG).show();
-//                else {
-//                    url = GlobalConstants.URL_LOC;
-//                    params = "lat=" + lat + "&lon=" + lon + "&cnt=14&appid=44db6a862fba0b067b1930da0d769e98";
-//                    // By Volley
-//                    GsonJsonObjectRequest gsonJsonObjectRequest = volleyWithGSON();
-//                    VolleyHelper.getInstance(mContext).addToRequestQueue(gsonJsonObjectRequest);
-//                }
-//
-//            } else {
-//                Toast.makeText(MainActivity.this, "Check Network/GPS Settings!", Toast.LENGTH_LONG).show();
-//            }
             return true;
         }
 
