@@ -93,7 +93,6 @@ public class DayForecastFragment extends Fragment {
             URL newurl = null;
             Bitmap mIcon_val = null;
             try {
-//                newurl = new URL("http://openweathermap.org/img/w/10d.png");
                 newurl = new URL(GlobalConstants.URL_IMG + params[0] + ".png");
                 mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
             } catch (IOException e) {
